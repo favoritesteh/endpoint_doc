@@ -1,0 +1,2580 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>API Dokumentasi – Stok & Penjualan</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+    body { 
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+      margin: 0; 
+      padding: 0; 
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #1e293b; 
+      min-height: 100vh;
+    }
+    .container { 
+      max-width: 1200px; 
+      margin: 40px auto; 
+      background: white; 
+      border-radius: 20px; 
+      box-shadow: 0 25px 60px rgba(0,0,0,0.2); 
+      overflow: hidden; 
+    }
+    header { 
+      text-align: center; 
+      padding: 80px 40px 70px; 
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #d946ef 100%); 
+      color: white; 
+      position: relative;
+      overflow: hidden;
+    }
+    header::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+      animation: pulse 15s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1) translate(0, 0); }
+      50% { transform: scale(1.1) translate(5%, 5%); }
+    }
+    h1 { 
+      font-size: 56px; 
+      margin: 0; 
+      font-weight: 800; 
+      position: relative;
+      z-index: 1;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    }
+    .subtitle {
+      font-size: 24px;
+      margin-top: 15px;
+      font-weight: 600;
+      opacity: 0.95;
+      position: relative;
+      z-index: 1;
+    }
+    .base-url {
+      background: rgba(255,255,255,0.25);
+      padding: 15px 30px;
+      border-radius: 12px;
+      display: inline-block;
+      margin-top: 25px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.3);
+      position: relative;
+      z-index: 1;
+      font-size: 14px;
+      font-family: 'Courier New', monospace;
+      word-break: break-all;
+    }
+    .download-buttons {
+      position: absolute;
+      top: 25px;
+      right: 35px;
+      display: flex;
+      gap: 12px;
+      z-index: 10;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      max-width: 400px;
+    }
+    .filter-section {
+      background: white;
+      padding: 30px;
+      margin: -20px 0 40px;
+      border-radius: 16px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+      border: 2px solid #e2e8f0;
+    }
+    .filter-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .filter-buttons {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .filter-btn {
+      padding: 12px 24px;
+      border: 2px solid #e2e8f0;
+      background: white;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+      color: #64748b;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .filter-btn:hover {
+      border-color: #cbd5e1;
+      background: #f8fafc;
+      transform: translateY(-2px);
+    }
+    .filter-btn.active {
+      background: linear-gradient(135deg, #4f46e5, #7c3aed);
+      color: white;
+      border-color: #4f46e5;
+    }
+    .filter-btn.active:hover {
+      background: linear-gradient(135deg, #4338ca, #6d28d9);
+    }
+    .hidden {
+      display: none !important;
+    }
+    .download-card { 
+      background: white; 
+      color: #4f46e5; 
+      padding: 12px 20px; 
+      border-radius: 12px; 
+      cursor: pointer; 
+      border: none;
+      font-weight: 600; 
+      display: flex; 
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      transition: all 0.3s ease;
+      font-size: 14px;
+      white-space: nowrap;
+      position: relative;
+      z-index: 10;
+    }
+    .download-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+      background: #f0f0f0;
+    }
+    .content-wrapper {
+      padding: 50px 60px;
+    }
+    h2 { 
+      background: linear-gradient(135deg, #4f46e5, #7c3aed);
+      color: white; 
+      padding: 18px 35px; 
+      border-radius: 14px; 
+      display: inline-block; 
+      margin: 50px 0 35px;
+      box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);
+      font-size: 24px;
+      font-weight: 700;
+    }
+    .group { 
+      font-size: 20px; 
+      font-weight: 700; 
+      color: #4f46e5; 
+      margin: 40px 0 25px;
+      padding-left: 15px;
+      border-left: 4px solid #4f46e5;
+    }
+    .endpoint { 
+      border: 2px solid #e2e8f0; 
+      border-radius: 16px; 
+      margin-bottom: 25px; 
+      overflow: hidden;
+      transition: all 0.3s ease;
+      background: white;
+    }
+    .endpoint:hover {
+      border-color: #cbd5e1;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+      transform: translateY(-2px);
+    }
+    .head { 
+      padding: 18px 30px; 
+      color: white; 
+      font-weight: 700; 
+      font-size: 17px; 
+      display: flex; 
+      justify-content: space-between;
+      align-items: center;
+    }
+    .method-path {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .endpoint-number {
+      background: rgba(255,255,255,0.3);
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 800;
+      min-width: 45px;
+      text-align: center;
+    }
+    .get { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+    .post { background: linear-gradient(135deg, #22c55e, #16a34a); }
+    .put { background: linear-gradient(135deg, #f59e0b, #d97706); }
+    .delete { background: linear-gradient(135deg, #ef4444, #dc2626); }
+    .body {
+      padding: 25px 30px;
+      background: #f8fafc;
+    }
+    pre { 
+      background: #0f172a; 
+      color: #e0e7ff; 
+      padding: 20px; 
+      border-radius: 12px; 
+      overflow-x: auto;
+      margin: 0;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      line-height: 1.6;
+      border: 1px solid #1e293b;
+    }
+    .roles {
+      background: rgba(255,255,255,0.3); 
+      padding: 7px 18px; 
+      border-radius: 20px; 
+      font-size: 13px;
+      font-weight: 600;
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+    footer {
+      text-align: center;
+      margin-top: 70px;
+      padding: 50px 40px;
+      background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+      color: #64748b;
+      border-top: 3px solid #e2e8f0;
+    }
+    footer strong {
+      color: #334155;
+      font-size: 18px;
+      display: block;
+      margin-bottom: 10px;
+    }
+    
+    @media (max-width: 768px) {
+      .container { margin: 20px; border-radius: 15px; }
+      .content-wrapper { padding: 30px 25px; }
+      header { padding: 140px 25px 50px; }
+      h1 { font-size: 36px; }
+      .subtitle { font-size: 18px; }
+      .download-buttons { 
+        position: static !important;
+        margin: 25px auto 0;
+        justify-content: center;
+        max-width: 100%;
+        padding: 0 20px;
+      }
+      .download-card {
+        font-size: 13px;
+        padding: 10px 16px;
+      }
+      .base-url { font-size: 12px; padding: 12px 20px; }
+      .head { flex-direction: column; gap: 12px; align-items: flex-start; }
+      .method-path { flex-direction: column; gap: 10px; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+<div class="container" id="content">
+  <header>
+    <h1><i class="fas fa-code"></i> API DOKUMENTASI</h1>
+    <p class="subtitle">Sistem Manajemen Stok & Penjualan</p>
+    <div class="base-url">
+      <strong>Base URL:</strong> https://esteh-backend-production.up.railway.app/api/
+    </div>
+    <div class="download-buttons">
+      <button class="download-card" onclick="generatePDF()">
+        <i class="fas fa-file-pdf"></i>
+        <span>PDF</span>
+      </button>
+      <button class="download-card" onclick="downloadMarkdown()">
+        <i class="fab fa-markdown"></i>
+        <span>Markdown</span>
+      </button>
+      <button class="download-card" onclick="downloadPostman()">
+        <i class="fas fa-file-code"></i>
+        <span>Postman</span>
+      </button>
+    </div>
+  </header>
+
+  <div class="content-wrapper">
+
+    <!-- FILTER SECTION -->
+    <div class="filter-section">
+      <div class="filter-title">
+        <i class="fas fa-filter"></i>
+        Filter berdasarkan Role
+      </div>
+      <div class="filter-buttons">
+        <button class="filter-btn active" onclick="filterByRole('all')">
+          <i class="fas fa-globe"></i> Semua Endpoint
+        </button>
+        <button class="filter-btn" onclick="filterByRole('owner')">
+          <i class="fas fa-crown"></i> Owner
+        </button>
+        <button class="filter-btn" onclick="filterByRole('gudang')">
+          <i class="fas fa-warehouse"></i> Gudang
+        </button>
+        <button class="filter-btn" onclick="filterByRole('karyawan')">
+          <i class="fas fa-user"></i> Karyawan
+        </button>
+        <button class="filter-btn" onclick="filterByRole('public')">
+          <i class="fas fa-unlock"></i> Public
+        </button>
+      </div>
+    </div>
+
+    <h2><i class="fas fa-globe"></i> TANPA AUTENTIKASI</h2>
+
+    <!-- LOGIN -->
+    <div class="endpoint" data-roles="public">
+      <div class="head post">
+        <div class="method-path">
+          <span class="endpoint-number">1</span>
+          <span>POST /login</span>
+        </div>
+        <span class="roles">Public</span>
+      </div>
+      <div class="body">
+        <pre>{
+  "username": "kasir1",
+  "password": "123456"
+}</pre>
+      </div>
+    </div>
+
+    <h2><i class="fas fa-lock"></i> AUTENTIKASI</h2>
+    
+    <div class="endpoint" data-roles="all">
+      <div class="head get">
+        <div class="method-path">
+          <span class="endpoint-number">2</span>
+          <span>GET /me</span>
+        </div>
+        <span class="roles">Semua role</span>
+      </div>
+      <div class="body">
+        <pre>// Tidak ada request body
+// Return user yang sedang login</pre>
+      </div>
+    </div>
+    
+    <div class="endpoint" data-roles="all">
+      <div class="head post">
+        <div class="method-path">
+          <span class="endpoint-number">3</span>
+          <span>POST /logout</span>
+        </div>
+        <span class="roles">Semua role</span>
+      </div>
+      <div class="body">
+        <pre>// Tidak ada request body
+// Revoke token saat ini</pre>
+      </div>
+    </div>
+
+
+    <!-- ========== OWNER ========== -->
+    <h2><i class="fas fa-crown"></i> OWNER</h2>
+
+    <!-- OUTLETS CRUD COMPLETE -->
+    <div class="group"><i class="fas fa-store"></i> Outlets</div>
+
+    <div class="endpoint" data-roles="owner">
+      <div class="head get">
+        <div class="method-path">
+          <span class="endpoint-number">4</span>
+          <span>GET /outlets</span>
+        </div>
+        <span class="roles">owner</span>
+      </div>
+      <div class="body">
+        <pre>// Dapatkan semua outlet beserta jumlah users</pre>
+      </div>
+    </div>
+    
+    <div class="endpoint" data-roles="owner">
+      <div class="head get">
+        <div class="method-path">
+          <span class="endpoint-number">5</span>
+          <span>GET /outlets/{id}</span>
+        </div>
+        <span class="roles">owner</span>
+      </div>
+      <div class="body">
+        <pre>// Dapatkan detail outlet beserta users</pre>
+      </div>
+    </div>
+
+    <div class="endpoint" data-roles="owner">
+      <div class="head post">
+        <div class="method-path">
+          <span class="endpoint-number">6</span>
+          <span>POST /outlets</span>
+        </div>
+        <span class="roles">owner</span>
+      </div>
+      <div class="body">
+        <pre>{
+  "nama": "Cabang A",
+  "alamat": "Jl A",
+  "is_active": true
+}</pre>
+      </div>
+    </div>
+
+    <div class="endpoint" data-roles="owner">
+      <div class="head put">
+        <div class="method-path">
+          <span class="endpoint-number">7</span>
+          <span>PUT /outlets/{id}</span>
+        </div>
+        <span class="roles">owner</span>
+      </div>
+      <div class="body">
+        <pre>{
+  "nama": "Cabang A Update",
+  "alamat": "Jl B",
+  "is_active": true
+}</pre>
+      </div>
+    </div>
+
+    <div class="endpoint" data-roles="owner">
+      <div class="head delete">
+        <div class="method-path">
+          <span class="endpoint-number">8</span>
+          <span>DELETE /outlets/{id}</span>
+        </div>
+        <span class="roles">owner</span>
+      </div>
+      <div class="body">
+        <pre>// Hapus outlet</pre>
+      </div>
+    </div>
+
+
+    <!-- USERS CRUD COMPLETE -->
+    <div class="group"><i class="fas fa-users"></i> Users</div>
+
+    <div class="endpoint" data-roles="owner">
+      <div class="head get">
+        <div class="method-path">
+          <span class="endpoint-number">9</span>
+          <span>GET /users</span>
+        </div>
+        <span class="roles">owner</span>
+      </div>
+      <div class="body">
+        <pre>// Dapatkan semua users beserta outlet</pre>
+      </div>
+    </div>
+    
+    <div class="endpoint" data-roles="owner">
+      <div class="head get">
+        <div class="method-path">
+          <span class="endpoint-number">10</span>
+          <span>GET /users/{id}</span>
+        </div>
+        <span class="roles">owner</span>
+      </div>
+      <div class="body">
+        <pre>// Dapatkan detail user beserta outlet</pre>
+      </div>
+    </div>
+
+    <div class="endpoint" data-roles="owner">
+      <div class="head post">
+        <div class="method-path">
+          <span class="endpoint-number">11</span>
+          <span>POST /users</span>
+        </div>
+        <span class="roles">owner</span>
+      </div>
+      <div class="body">
+        <pre>{
+  "username": "kasir",
+  "password": "123",
+  "role": "karyawan",
+  "outlet_id": 1
+}</pre>
+      </div>
+    </div>
+
+    <div class="endpoint" data-roles="owner">
+      <div class="head put">
+        <div class="method-path">
+          <span class="endpoint-number">12</span>
+          <span>PUT /users/{id}</span>
+        </div>
+        <span class="roles">owner</span>
+      </div>
+      <div class="body">
+        <pre>{
+  "username": "kasir_update",
+  "password": "newpass123",
+  "role": "karyawan",
+  "outlet_id": 2
+}</pre>
+      </div>
+    </div>
+    
+    <div class="endpoint" data-roles="owner">
+      <div class="head delete">
+        <div class="method-path">
+          <span class="endpoint-number">13</span>
+          <span>DELETE /users/{id}</span>
+        </div>
+        <span class="roles">owner</span>
+      </div>
+      <div class="body">
+        <pre>// Hapus user</pre>
+      </div>
+    </div>
+
+
+    <!-- LAPORAN -->
+    <div class="group"><i class="fas fa-chart-bar"></i> Laporan</div>
+
+    <div class="endpoint" data-roles="owner">
+      <div class="head get">
+        <div class="method-path">
+          <span class="endpoint-number">14</span>
+          <span>GET /laporan/pendapatan</span>
+        </div>
+        <span class="roles">owner</span>
+      </div>
+      <div class="body">
+        <pre>// Query params:
+// ?start_date=2025-01-01&end_date=2025-12-31
+// Dapatkan laporan pendapatan per hari</pre>
+      </div>
+    </div>
+
+    <div class="endpoint" data-roles="owner">
+      <div class="head get">
+        <div class="method-path">
+          <span class="endpoint-number">15</span>
+          <span>GET /laporan/export</span>
+        </div>
+        <span class="roles">owner</span>
+      </div>
+      <div class="body">
+        <pre>// Query params:
+// ?start_date=2025-01-01&end_date=2025-12-31
+// Export laporan ke Excel</pre>
+      </div>
+    </div>
+
+    <div class="endpoint" data-roles="owner">
+      <div class="head get">
+        <div class="method-path">
+          <span class="endpoint-number">16</span>
+          <span>GET /dashboard</span>
+        </div>
+        <span class="roles">owner</span>
+      </div>
+      <div class="body">
+        <pre>// Data dashboard:
+// - Total outlet, karyawan
+// - Pendapatan hari ini
+// - Stok gudang, dll.</pre>
+      </div>
+    </div>
+
+
+    <!-- ========== GUDANG ========== -->
+    <h2><i class="fas fa-warehouse"></i> GUDANG</h2>
+
+    <!-- BAHAN / GUDANG -->
+    <div class="group"><i class="fas fa-boxes"></i> Bahan</div>
+
+    <div class="endpoint" data-roles="gudang">
+      <div class="head get">
+        <div class="method-path">
+          <span class="endpoint-number">17</span>
+          <span>GET /gudang/bahan</span>
+        </div>
+        <span class="roles">gudang</span>
+      </div>
+      <div class="body">
+        <pre>// Dapatkan semua bahan</pre>
+      </div>
+    </div>
+    
+    <div class="endpoint" data-roles="gudang">
+      <div class="head get">
+        <div class="method-path">
+          <span class="endpoint-number">18</span>
+          <span>GET /gudang/bahan/{id}</span>
+        </div>
+        <span class="roles">gudang</span>
+      </div>
+      <div class="body">
+        <pre>// Dapatkan detail bahan</pre>
+      </div>
+    </div>
+
+    <div class="endpoint" data-roles="gudang">
+      <div class="head post">
+        <div class="method-path">
+          <span class="endpoint-number">19</span>
+          <span>POST /gudang/bahan</span>
+        </div>
+        <span class="roles">gudang</span>
+      </div>
+      <div class="body">
+        <pre>{
+  "nama": "Gula Pasir",
+  "satuan": "kg",
+  "stok_minimum_gudang": 100,
+  "stok_minimum_outlet": 20
+}</pre>
+      </div>
+    </div>
+    
+    <div class="endpoint" data-roles="gudang">
+      <div class="head put">
+        <div class="method-path">
+          <span class="endpoint-number">20</span>
+          <span>PUT /gudang/bahan/{id}</span>
+        </div>
+        <span class="roles">gudang</span>
+      </div>
+      <div class="body">
+        <pre>{
+  "nama": "Gula Pasir Premium",
+  "satuan": "kg",
+  "stok_minimum_gudang": 150,
+  "stok_minimum_outlet": 30
+}</pre>
+      </div>
+    </div>
+    
+    <div class="endpoint" data-roles="gudang">
+      <div class="head delete">
+        <div class="method-path">
+          <span class="endpoint-number">21</span>
+          <span>DELETE /gudang/bahan/{id}</span>
+        </div>
+        <span class="roles">gudang</span>
+      </div>
+      <div class="body">
+        <pre>// Hapus bahan</pre>
+      </div>
+    </div>
+
+
+    <!-- Barang masuk -->
+    <div class="group"><i class="fas fa-arrow-down"></i> Barang Masuk</div>
+    
+    <div class="endpoint" data-roles="gudang">
+      <div class="head get">
+        <div class="method-path">
+          <span class="endpoint-number">22</span>
+          <span>GET /gudang/barang-masuk</span>
+        </div>
+        <span class="roles">gudang</span>
+      </div>
+      <div class="body">
+        <pre>// Dapatkan semua barang masuk beserta bahan</pre>
+      </div>
+    </div>
+    
+    <div class="endpoint" data-roles="gudang">
+      <div class="head get">
+        <div class="method-path">
+          <span class="endpoint-number">23</span>
+          <span>GET /gudang/barang-masuk/{id}</span>
+        </div>
+        <span class="roles">gudang</span>
+      </div>
+      <div class="body">
+        <pre>// Dapatkan detail barang masuk</pre>
+      </div>
+    </div>
+    
+    <div class="endpoint" data-roles="gudang">
+      <div class="head post">
+        <div class="method-path">
+          <span class="endpoint-number">24</span>
+          <span>POST /gudang/barang-masuk</span>
+        </div>
+        <span class="roles">gudang</span>
+      </div>
+      <div class="body">
+        <pre>{
+  "bahan_id": 1,
+  "jumlah": 100.5,
+  "supplier": "Supplier XYZ"
+}</pre>
+      </div>
+    </div>
+
+    <div class="endpoint" data-roles="gudang">
+      <div class="head put">
+        <div class="method-path">
+          <span class="endpoint-number">25</span>
+          <span>PUT /gudang/barang-masuk/{id}</span>
+        </div>
+        <span class="roles">gudang</span>
+      </div>
+      <div class="body">
+        <pre>{
+  "bahan_id": 2,
+  "jumlah": 200.0,
+  "supplier": "Supplier Baru"
+}</pre>
+      </div>
+    </div>
+
+    <div class="endpoint" data-roles="gudang">
+      <div class="head delete">
+        <div class="method-path">
+          <span class="endpoint-number">26</span>
+          <span>DELETE /gudang/barang-masuk/{id}</span>
+        </div>
+        <span class="roles">gudang</span>
+      </div>
+      <div class="body">
+        <pre>// Hapus barang masuk (kurangi stok)</pre>
+      </div>
+    </div>
+
+    <!-- Barang keluar -->
+    <div class="group"><i class="fas fa-arrow-up"></i> Barang Keluar</div>
+    
+    <div class="endpoint" data-roles="gudang">
+      <div class="head get">
+        <div class="method-path">
+          <span class="endpoint-number">27</span>
+          <span>GET /gudang/barang-keluar</span>
+        </div>
+        <span class="roles">gudang</span>
+      </div>
+      <div class="body">
+        <pre>// Dapatkan semua barang keluar beserta bahan dan outlet</pre>
+      </div>
+    </div>
+    
+    <div class="endpoint" data-roles="gudang">
+      <div class="head get">
+        <div class="method-path">
+          <span class="endpoint-number">28</span>
+          <span>GET /gudang/barang-keluar/{id}</span>
+        </div>
+        <span class="roles">gudang</span>
+      </div>
+      <div class="body">
+        <pre>// Dapatkan detail barang keluar</pre>
+      </div>
+    </div>
+    
+    <div class="endpoint" data-roles="gudang">
+      <div class="head post">
+        <div class="method-path">
+          <span class="endpoint-number">29</span>
+          <span>POST /gudang/barang-keluar</span>
+        </div>
+        <span class="roles">gudang</span>
+      </div>
+      <div class="body">
+        <pre>{
+  "permintaan_id": 1
+}</pre>
+      </div>
+    </div>
+
+    <div class="endpoint" data-roles="gudang">
+      <div class="head put">
+        <div class="method-path">
+          <span class="endpoint-number">30</span>
+          <span>PUT /gudang/barang-keluar/{id}</span>
+        </div>
+        <span class="roles">gudang</span>
+      </div>
+      <div class="body">
+        <pre>{
+  "jumlah": 50
+  // Gunakan multipart/form-data untuk bukti_foto
+}</pre>
+      </div>
+    </div>
+
+    <div class="endpoint" data-roles="gudang">
+      <div class="head delete">
+        <div class="method-path">
+          <span class="endpoint-number">31</span>
+          <span>DELETE /gudang/barang-keluar/{id}</span>
+        </div>
+        <span class="roles">gudang</span>
+      </div>
+      <div class="body">
+        <pre>// Hapus barang keluar (kembalikan stok)</pre>
+      </div>
+    </div>
+    
+    <div class="endpoint" data-roles="gudang,karyawan">
+      <div class="head post">
+        <div class="method-path">
+          <span class="endpoint-number">32</span>
+          <span>POST /gudang/barang-keluar/{id}/terima</span>
+        </div>
+        <span class="roles">gudang, karyawan</span>
+      </div>
+      <div class="body">
+        <pre>{
+  // Opsional: bukti_foto (multipart/form-data)
+  // Update status ke 'diterima', tambah stok outlet
+}</pre>
+      </div>
+    </div>
+
+
+    <!-- STOK GUDANG -->
+    <div class="group"><i class="fas fa-warehouse"></i> Stok Gudang</div>
+    
+    <div class="endpoint" data-roles="gudang">
+      <div class="head get">
+        <div class="method-path">
+          <span class="endpoint-number">33</span>
+          <span>GET /gudang/stok</span>
+        </div>
+        <span class="roles">gudang</span>
+      </div>
+      <div class="body">
+        <pre>// Dapatkan stok gudang beserta status (Kritis/Aman)</pre>
+      </div>
+    </div>
+
+
+    <!-- PERMINTAAN STOK -->
+    <div class="group"><i class="fas fa-clipboard-list"></i> Permintaan Stok</div>
+    
+    <div class="endpoint" data-roles="gudang">
+      <div class="head get">
+        <div class="method-path">
+          <span class="endpoint-number">34</span>
+          <span>GET /gudang/permintaan-stok</span>
+        </div>
+        <span class="roles">gudang</span>
+      </div>
+      <div class="body">
+        <pre>// Dapatkan semua permintaan stok beserta bahan dan outlet</pre>
+      </div>
+    </div>
+    
+    <div class="endpoint" data-roles="gudang">
+      <div class="head get">
+        <div class="method-path">
+          <span class="endpoint-number">35</span>
+          <span>GET /gudang/permintaan-stok/{id}</span>
+        </div>
+        <span class="roles">gudang</span>
+      </div>
+      <div class="body">
+        <pre>// Dapatkan detail permintaan stok</pre>
+      </div>
+    </div>
+    
+    <div class="endpoint" data-roles="gudang">
+      <div class="head put">
+        <div class="method-path">
+          <span class="endpoint-number">36</span>
+          <span>PUT /gudang/permintaan-stok/{id}</span>
+        </div>
+        <span class="roles">gudang</span>
+      </div>
+      <div class="body">
+        <pre>{
+  "status": "approved"  // atau "rejected"
+}</pre>
+      </div>
+    </div>
+
+
+    <!-- ========== KARYAWAN / KASIR ========== -->
+    <h2><i class="fas fa-user"></i> KARYAWAN / KASIR</h2>
+
+    <div class="group"><i class="fas fa-shopping-bag"></i> Produk</div>
+    
+    <div class="endpoint" data-roles="karyawan">
+      <div class="head get">
+        <div class="method-path">
+          <span class="endpoint-number">37</span>
+          <span>GET /produk</span>
+        </div>
+        <span class="roles">karyawan</span>
+      </div>
+      <div class="body">
+        <pre>// Dapatkan semua produk yang available beserta komposisi</pre>
+      </div>
+    </div>
+    
+    <div class="endpoint" data-roles="karyawan">
+      <div class="head get">
+        <div class="method-path">
+          <span class="endpoint-number">38</span>
+          <span>GET /produk/{id}</span>
+        </div>
+        <span class="roles">karyawan</span>
+      </div>
+      <div class="body">
+        <pre>// Dapatkan detail produk beserta komposisi</pre>
+      </div>
+    </div>
+    
+    <div class="endpoint" data-roles="karyawan">
+      <div class="head post">
+        <div class="method-path">
+          <span class="endpoint-number">39</span>
+          <span>POST /produk</span>
+        </div>
+        <span class="roles">karyawan</span>
+      </div>
+      <div class="body">
+        <pre>{
+  "nama": "Es Teh Manis",
+  "harga": 5000,
+  "gambar": "file upload (opsional)",
+  "komposisi": [
+    {
+      "bahan_id": 1,
+      "quantity": 2.5
+    },
+    {
+      "bahan_id": 2,
+      "quantity": 1.0
+    }
+  ]
+}
+// Gunakan multipart/form-data untuk gambar</pre>
+      </div>
+    </div>
+    
+    <div class="endpoint" data-roles="karyawan">
+      <div class="head put">
+        <div class="method-path">
+          <span class="endpoint-number">40</span>
+          <span>PUT /produk/{id}</span>
+        </div>
+        <span class="roles">karyawan</span>
+      </div>
+      <div class="body">
+        <pre>{
+  "nama": "Es Teh Manis Update",
+  "harga": 6000,
+  "gambar": "file upload (opsional)",
+  "komposisi": [
+    {
+      "bahan_id": 1,
+      "quantity": 3.0
+    }
+  ]
+}
+// Gunakan multipart/form-data untuk gambar</pre>
+      </div>
+    </div>
+    
+    <div class="endpoint" data-roles="karyawan">
+      <div class="head delete">
+        <div class="method-path">
+          <span class="endpoint-number">41</span>
+          <span>DELETE /produk/{id}</span>
+        </div>
+        <span class="roles">karyawan</span>
+      </div>
+      <div class="body">
+        <pre>// Hapus produk</pre>
+      </div>
+    </div>
+
+
+    <div class="group"><i class="fas fa-receipt"></i> Transaksi</div>
+    
+    <div class="endpoint" data-roles="karyawan">
+      <div class="head get">
+        <div class="method-path">
+          <span class="endpoint-number">42</span>
+          <span>GET /transaksi</span>
+        </div>
+        <span class="roles">karyawan</span>
+      </div>
+      <div class="body">
+        <pre>// Dapatkan semua transaksi untuk outlet pengguna beserta items</pre>
+      </div>
+    </div>
+    
+    <div class="endpoint" data-roles="karyawan">
+      <div class="head get">
+        <div class="method-path">
+          <span class="endpoint-number">43</span>
+          <span>GET /transaksi/{id}</span>
+        </div>
+        <span class="roles">karyawan</span>
+      </div>
+      <div class="body">
+        <pre>// Dapatkan detail transaksi beserta items</pre>
+      </div>
+    </div>
+    
+    <div class="endpoint" data-roles="karyawan">
+      <div class="head post">
+        <div class="method-path">
+          <span class="endpoint-number">44</span>
+          <span>POST /transaksi</span>
+        </div>
+        <span class="roles">karyawan</span>
+      </div>
+      <div class="body">
+        <pre>{
+  "tanggal": "2025-12-05 14:30:00",  // Opsional, default now
+  "metode_bayar": "qris",  // atau "tunai"
+  "bukti_qris": "file upload",  // Opsional jika qris
+  "items": "[{\"produk_id\":1,\"quantity\":2},{\"produk_id\":2,\"quantity\":1}]"
+}
+// Gunakan multipart/form-data untuk bukti_qris
+// Items sebagai JSON string</pre>
+      </div>
+    </div>
+    
+    <div class="endpoint" data-roles="karyawan">
+      <div class="head put">
+        <div class="method-path">
+          <span class="endpoint-number">45</span>
+          <span>PUT /transaksi/{id}</span>
+        </div>
+        <span class="roles">karyawan</span>
+      </div>
+      <div class="body">
+        <pre>{
+  "tanggal": "2025-12-05 15:00:00",
+  "metode_bayar": "tunai",
+  "bukti_qris": "file upload (opsional)",
+  "items": "[{\"produk_id\":1,\"quantity\":3}]"
+}
+// Gunakan multipart/form-data untuk bukti_qris</pre>
+      </div>
+    </div>
+    
+    <div class="endpoint" data-roles="karyawan">
+      <div class="head delete">
+        <div class="method-path">
+          <span class="endpoint-number">46</span>
+          <span>DELETE /transaksi/{id}</span>
+        </div>
+        <span class="roles">karyawan</span>
+      </div>
+      <div class="body">
+        <pre>// Hapus transaksi (kembalikan stok)</pre>
+      </div>
+    </div>
+
+
+    <div class="group"><i class="fas fa-hand-holding-box"></i> Permintaan Stok Outlet</div>
+    
+    <div class="endpoint" data-roles="karyawan">
+      <div class="head get">
+        <div class="method-path">
+          <span class="endpoint-number">47</span>
+          <span>GET /permintaan-stok</span>
+        </div>
+        <span class="roles">karyawan</span>
+      </div>
+      <div class="body">
+        <pre>// Dapatkan semua permintaan stok untuk outlet pengguna</pre>
+      </div>
+    </div>
+    
+    <div class="endpoint" data-roles="karyawan">
+      <div class="head get">
+        <div class="method-path">
+          <span class="endpoint-number">48</span>
+          <span>GET /permintaan-stok/{id}</span>
+        </div>
+        <span class="roles">karyawan</span>
+      </div>
+      <div class="body">
+        <pre>// Dapatkan detail permintaan stok</pre>
+      </div>
+    </div>
+    
+    <div class="endpoint" data-roles="karyawan">
+      <div class="head post">
+        <div class="method-path">
+          <span class="endpoint-number">49</span>
+          <span>POST /permintaan-stok</span>
+        </div>
+        <span class="roles">karyawan</span>
+      </div>
+      <div class="body">
+        <pre>{
+  "bahan_id": 1,
+  "jumlah": 50.0
+}</pre>
+      </div>
+    </div>
+    
+    <div class="endpoint" data-roles="karyawan">
+      <div class="head put">
+        <div class="method-path">
+          <span class="endpoint-number">50</span>
+          <span>PUT /permintaan-stok/{id}</span>
+        </div>
+        <span class="roles">karyawan</span>
+      </div>
+      <div class="body">
+        <pre>{
+  "bahan_id": 2,
+  "jumlah": 75.0
+}</pre>
+      </div>
+    </div>
+    
+    <div class="endpoint" data-roles="karyawan">
+      <div class="head delete">
+        <div class="method-path">
+          <span class="endpoint-number">51</span>
+          <span>DELETE /permintaan-stok/{id}</span>
+        </div>
+        <span class="roles">karyawan</span>
+      </div>
+      <div class="body">
+        <pre>// Hapus permintaan stok</pre>
+      </div>
+    </div>
+
+
+    <div class="group"><i class="fas fa-chart-line"></i> Stok Outlet</div>
+    
+    <div class="endpoint" data-roles="karyawan">
+      <div class="head get">
+        <div class="method-path">
+          <span class="endpoint-number">52</span>
+          <span>GET /stok/outlet</span>
+        </div>
+        <span class="roles">karyawan</span>
+      </div>
+      <div class="body">
+        <pre>// Dapatkan stok outlet pengguna beserta status (Kritis/Aman)</pre>
+      </div>
+    </div>
+
+    <footer>
+      <strong>Dokumentasi API Lengkap</strong>
+      <p>© 2025 Sistem Manajemen Stok & Penjualan</p>
+      <p style="font-size: 14px; margin-top: 10px;">Total: 52 Endpoint</p>
+    </footer>
+  </div>
+</div>
+
+<script>
+function generatePDF() {
+  // Check if html2pdf is loaded
+  if (typeof html2pdf === 'undefined') {
+    alert('Library PDF belum siap. Silakan refresh halaman dan coba lagi.');
+    return;
+  }
+  
+  const element = document.getElementById('content');
+  const opt = {
+    margin: [10, 10, 10, 10],
+    filename: 'API_Dokumentasi_Stok_Penjualan_2025.pdf',
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2, useCORS: true },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+  };
+  
+  html2pdf().set(opt).from(element).save();
+}
+
+function filterByRole(role) {
+  // Update active button
+  document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+  
+  // Find the clicked button
+  const buttons = document.querySelectorAll('.filter-btn');
+  buttons.forEach(btn => {
+    if (btn.textContent.includes('Semua') && role === 'all') btn.classList.add('active');
+    if (btn.textContent.includes('Owner') && role === 'owner') btn.classList.add('active');
+    if (btn.textContent.includes('Gudang') && role === 'gudang') btn.classList.add('active');
+    if (btn.textContent.includes('Karyawan') && role === 'karyawan') btn.classList.add('active');
+    if (btn.textContent.includes('Public') && role === 'public') btn.classList.add('active');
+  });
+  
+  const endpoints = document.querySelectorAll('.endpoint');
+  const sections = document.querySelectorAll('h2, .group');
+  
+  if (role === 'all') {
+    // Show all endpoints
+    endpoints.forEach(endpoint => endpoint.classList.remove('hidden'));
+    sections.forEach(section => section.style.display = '');
+  } else {
+    // Filter endpoints
+    endpoints.forEach(endpoint => {
+      const roles = endpoint.getAttribute('data-roles');
+      if (!roles) {
+        endpoint.classList.add('hidden');
+        return;
+      }
+      
+      const roleList = roles.split(',').map(r => r.trim());
+      
+      if (roleList.includes(role) || roleList.includes('all')) {
+        endpoint.classList.remove('hidden');
+      } else {
+        endpoint.classList.add('hidden');
+      }
+    });
+    
+    // Hide sections with no visible endpoints
+    sections.forEach(section => {
+      let nextEl = section.nextElementSibling;
+      let hasVisibleEndpoint = false;
+      
+      while (nextEl && !nextEl.matches('h2') && !nextEl.matches('.group')) {
+        if (nextEl.matches('.endpoint') && !nextEl.classList.contains('hidden')) {
+          hasVisibleEndpoint = true;
+          break;
+        }
+        nextEl = nextEl.nextElementSibling;
+      }
+      
+      section.style.display = hasVisibleEndpoint ? '' : 'none';
+    });
+  }
+  
+  // Update counter
+  updateCounter();
+}
+
+function updateCounter() {
+  const visibleEndpoints = document.querySelectorAll('.endpoint:not(.hidden)').length;
+  const totalEndpoints = document.querySelectorAll('.endpoint').length;
+  
+  const footer = document.querySelector('footer p:last-child');
+  if (footer) {
+    if (visibleEndpoints === totalEndpoints) {
+      footer.textContent = `Total: ${totalEndpoints} Endpoint`;
+    } else {
+      footer.textContent = `Menampilkan: ${visibleEndpoints} dari ${totalEndpoints} Endpoint`;
+    }
+  }
+}
+
+function downloadMarkdown() {
+  const markdown = `# API DOKUMENTASI
+## Sistem Manajemen Stok & Penjualan
+
+**Base URL:** \`https://esteh-backend-production.up.railway.app/api/\`
+
+---
+
+## TANPA AUTENTIKASI
+
+### 1. POST /login
+**Role:** Public  
+**Body:**
+\`\`\`json
+{
+  "username": "kasir1",
+  "password": "123456"
+}
+\`\`\`
+
+---
+
+## AUTENTIKASI
+
+### 2. GET /me
+**Role:** Semua role  
+Tidak ada request body. Return user yang sedang login.
+
+### 3. POST /logout
+**Role:** Semua role  
+Tidak ada request body. Revoke token saat ini.
+
+---
+
+## OWNER
+
+### Outlets
+
+#### 4. GET /outlets
+**Role:** owner  
+Dapatkan semua outlet beserta jumlah users.
+
+#### 5. GET /outlets/{id}
+**Role:** owner  
+Dapatkan detail outlet beserta users.
+
+#### 6. POST /outlets
+**Role:** owner  
+**Body:**
+\`\`\`json
+{
+  "nama": "Cabang A",
+  "alamat": "Jl A",
+  "is_active": true
+}
+\`\`\`
+
+#### 7. PUT /outlets/{id}
+**Role:** owner  
+**Body:**
+\`\`\`json
+{
+  "nama": "Cabang A Update",
+  "alamat": "Jl B",
+  "is_active": true
+}
+\`\`\`
+
+#### 8. DELETE /outlets/{id}
+**Role:** owner  
+Hapus outlet.
+
+### Users
+
+#### 9. GET /users
+**Role:** owner  
+Dapatkan semua users beserta outlet.
+
+#### 10. GET /users/{id}
+**Role:** owner  
+Dapatkan detail user beserta outlet.
+
+#### 11. POST /users
+**Role:** owner  
+**Body:**
+\`\`\`json
+{
+  "username": "kasir",
+  "password": "123",
+  "role": "karyawan",
+  "outlet_id": 1
+}
+\`\`\`
+
+#### 12. PUT /users/{id}
+**Role:** owner  
+**Body:**
+\`\`\`json
+{
+  "username": "kasir_update",
+  "password": "newpass123",
+  "role": "karyawan",
+  "outlet_id": 2
+}
+\`\`\`
+
+#### 13. DELETE /users/{id}
+**Role:** owner  
+Hapus user.
+
+### Laporan
+
+#### 14. GET /laporan/pendapatan
+**Role:** owner  
+Query params: ?start_date=2025-01-01&end_date=2025-12-31  
+Dapatkan laporan pendapatan per hari.
+
+#### 15. GET /laporan/export
+**Role:** owner  
+Query params: ?start_date=2025-01-01&end_date=2025-12-31  
+Export laporan ke Excel.
+
+#### 16. GET /dashboard
+**Role:** owner  
+Data dashboard: Total outlet, karyawan, pendapatan hari ini, stok gudang, dll.
+
+---
+
+## GUDANG
+
+### Bahan
+
+#### 17. GET /gudang/bahan
+**Role:** gudang  
+Dapatkan semua bahan.
+
+#### 18. GET /gudang/bahan/{id}
+**Role:** gudang  
+Dapatkan detail bahan.
+
+#### 19. POST /gudang/bahan
+**Role:** gudang  
+**Body:**
+\`\`\`json
+{
+  "nama": "Gula Pasir",
+  "satuan": "kg",
+  "stok_minimum_gudang": 100,
+  "stok_minimum_outlet": 20
+}
+\`\`\`
+
+#### 20. PUT /gudang/bahan/{id}
+**Role:** gudang  
+**Body:**
+\`\`\`json
+{
+  "nama": "Gula Pasir Premium",
+  "satuan": "kg",
+  "stok_minimum_gudang": 150,
+  "stok_minimum_outlet": 30
+}
+\`\`\`
+
+#### 21. DELETE /gudang/bahan/{id}
+**Role:** gudang  
+Hapus bahan.
+
+### Barang Masuk
+
+#### 22. GET /gudang/barang-masuk
+**Role:** gudang  
+Dapatkan semua barang masuk beserta bahan.
+
+#### 23. GET /gudang/barang-masuk/{id}
+**Role:** gudang  
+Dapatkan detail barang masuk.
+
+#### 24. POST /gudang/barang-masuk
+**Role:** gudang  
+**Body:**
+\`\`\`json
+{
+  "bahan_id": 1,
+  "jumlah": 100.5,
+  "supplier": "Supplier XYZ"
+}
+\`\`\`
+
+#### 25. PUT /gudang/barang-masuk/{id}
+**Role:** gudang  
+**Body:**
+\`\`\`json
+{
+  "bahan_id": 2,
+  "jumlah": 200.0,
+  "supplier": "Supplier Baru"
+}
+\`\`\`
+
+#### 26. DELETE /gudang/barang-masuk/{id}
+**Role:** gudang  
+Hapus barang masuk (kurangi stok).
+
+### Barang Keluar
+
+#### 27. GET /gudang/barang-keluar
+**Role:** gudang  
+Dapatkan semua barang keluar beserta bahan dan outlet.
+
+#### 28. GET /gudang/barang-keluar/{id}
+**Role:** gudang  
+Dapatkan detail barang keluar.
+
+#### 29. POST /gudang/barang-keluar
+**Role:** gudang  
+**Body:**
+\`\`\`json
+{
+  "permintaan_id": 1
+}
+\`\`\`
+
+#### 30. PUT /gudang/barang-keluar/{id}
+**Role:** gudang  
+**Body:**
+\`\`\`json
+{
+  "jumlah": 50
+}
+\`\`\`
+Note: Gunakan multipart/form-data untuk bukti_foto.
+
+#### 31. DELETE /gudang/barang-keluar/{id}
+**Role:** gudang  
+Hapus barang keluar (kembalikan stok).
+
+#### 32. POST /gudang/barang-keluar/{id}/terima
+**Role:** gudang, karyawan  
+Body: Opsional bukti_foto (multipart/form-data)  
+Update status ke 'diterima', tambah stok outlet.
+
+### Stok Gudang
+
+#### 33. GET /gudang/stok
+**Role:** gudang  
+Dapatkan stok gudang beserta status (Kritis/Aman).
+
+### Permintaan Stok
+
+#### 34. GET /gudang/permintaan-stok
+**Role:** gudang  
+Dapatkan semua permintaan stok beserta bahan dan outlet.
+
+#### 35. GET /gudang/permintaan-stok/{id}
+**Role:** gudang  
+Dapatkan detail permintaan stok.
+
+#### 36. PUT /gudang/permintaan-stok/{id}
+**Role:** gudang  
+**Body:**
+\`\`\`json
+{
+  "status": "approved"
+}
+\`\`\`
+
+---
+
+## KARYAWAN / KASIR
+
+### Produk
+
+#### 37. GET /produk
+**Role:** karyawan  
+Dapatkan semua produk yang available beserta komposisi.
+
+#### 38. GET /produk/{id}
+**Role:** karyawan  
+Dapatkan detail produk beserta komposisi.
+
+#### 39. POST /produk
+**Role:** karyawan  
+**Body:**
+\`\`\`json
+{
+  "nama": "Es Teh Manis",
+  "harga": 5000,
+  "gambar": "file upload (opsional)",
+  "komposisi": [
+    {
+      "bahan_id": 1,
+      "quantity": 2.5
+    },
+    {
+      "bahan_id": 2,
+      "quantity": 1.0
+    }
+  ]
+}
+\`\`\`
+Note: Gunakan multipart/form-data untuk gambar.
+
+#### 40. PUT /produk/{id}
+**Role:** karyawan  
+**Body:**
+\`\`\`json
+{
+  "nama": "Es Teh Manis Update",
+  "harga": 6000,
+  "gambar": "file upload (opsional)",
+  "komposisi": [
+    {
+      "bahan_id": 1,
+      "quantity": 3.0
+    }
+  ]
+}
+\`\`\`
+Note: Gunakan multipart/form-data untuk gambar.
+
+#### 41. DELETE /produk/{id}
+**Role:** karyawan  
+Hapus produk.
+
+### Transaksi
+
+#### 42. GET /transaksi
+**Role:** karyawan  
+Dapatkan semua transaksi untuk outlet pengguna beserta items.
+
+#### 43. GET /transaksi/{id}
+**Role:** karyawan  
+Dapatkan detail transaksi beserta items.
+
+#### 44. POST /transaksi
+**Role:** karyawan  
+**Body:**
+\`\`\`json
+{
+  "tanggal": "2025-12-05 14:30:00",
+  "metode_bayar": "qris",
+  "bukti_qris": "file upload",
+  "items": "[{\"produk_id\":1,\"quantity\":2},{\"produk_id\":2,\"quantity\":1}]"
+}
+\`\`\`
+Note: Gunakan multipart/form-data untuk bukti_qris. Items sebagai JSON string.
+
+#### 45. PUT /transaksi/{id}
+**Role:** karyawan  
+**Body:**
+\`\`\`json
+{
+  "tanggal": "2025-12-05 15:00:00",
+  "metode_bayar": "tunai",
+  "bukti_qris": "file upload (opsional)",
+  "items": "[{\"produk_id\":1,\"quantity\":3}]"
+}
+\`\`\`
+Note: Gunakan multipart/form-data untuk bukti_qris.
+
+#### 46. DELETE /transaksi/{id}
+**Role:** karyawan  
+Hapus transaksi (kembalikan stok).
+
+### Permintaan Stok Outlet
+
+#### 47. GET /permintaan-stok
+**Role:** karyawan  
+Dapatkan semua permintaan stok untuk outlet pengguna.
+
+#### 48. GET /permintaan-stok/{id}
+**Role:** karyawan  
+Dapatkan detail permintaan stok.
+
+#### 49. POST /permintaan-stok
+**Role:** karyawan  
+**Body:**
+\`\`\`json
+{
+  "bahan_id": 1,
+  "jumlah": 50.0
+}
+\`\`\`
+
+#### 50. PUT /permintaan-stok/{id}
+**Role:** karyawan  
+**Body:**
+\`\`\`json
+{
+  "bahan_id": 2,
+  "jumlah": 75.0
+}
+\`\`\`
+
+#### 51. DELETE /permintaan-stok/{id}
+**Role:** karyawan  
+Hapus permintaan stok.
+
+### Stok Outlet
+
+#### 52. GET /stok/outlet
+**Role:** karyawan  
+Dapatkan stok outlet pengguna beserta status (Kritis/Aman).
+
+---
+
+**Total: 52 Endpoint**  
+© 2025 Sistem Manajemen Stok & Penjualan
+`;
+
+  const blob = new Blob([markdown], { type: 'text/markdown' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'API_Dokumentasi_Stok_Penjualan_2025.md';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+</script>
+</body>
+</html>
+}
+
+function downloadPostman() {
+  const postmanCollection = {
+    "info": {
+      "name": "Stok & Penjualan API - Complete",
+      "description": "API Documentation untuk Sistem Manajemen Stok & Penjualan",
+      "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "variable": [
+      {
+        "key": "base_url",
+        "value": "https://esteh-backend-production.up.railway.app/api",
+        "type": "string"
+      },
+      {
+        "key": "token",
+        "value": "",
+        "type": "string"
+      }
+    ],
+    "item": [
+      {
+        "name": "Auth",
+        "item": [
+          {
+            "name": "1. Login",
+            "request": {
+              "method": "POST",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": {
+                "mode": "raw",
+                "raw": JSON.stringify({"username": "kasir1", "password": "123456"}, null, 2)
+              },
+              "url": {
+                "raw": "{{base_url}}/login",
+                "host": ["{{base_url}}"],
+                "path": ["login"]
+              }
+            }
+          },
+          {
+            "name": "2. Get Me",
+            "request": {
+              "method": "GET",
+              "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+              "url": {
+                "raw": "{{base_url}}/me",
+                "host": ["{{base_url}}"],
+                "path": ["me"]
+              }
+            }
+          },
+          {
+            "name": "3. Logout",
+            "request": {
+              "method": "POST",
+              "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+              "url": {
+                "raw": "{{base_url}}/logout",
+                "host": ["{{base_url}}"],
+                "path": ["logout"]
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "Owner - Outlets",
+        "item": [
+          {
+            "name": "4. List Outlets",
+            "request": {
+              "method": "GET",
+              "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+              "url": {
+                "raw": "{{base_url}}/outlets",
+                "host": ["{{base_url}}"],
+                "path": ["outlets"]
+              }
+            }
+          },
+          {
+            "name": "5. Get Outlet",
+            "request": {
+              "method": "GET",
+              "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+              "url": {
+                "raw": "{{base_url}}/outlets/1",
+                "host": ["{{base_url}}"],
+                "path": ["outlets", "1"]
+              }
+            }
+          },
+          {
+            "name": "6. Create Outlet",
+            "request": {
+              "method": "POST",
+              "header": [
+                {"key": "Authorization", "value": "Bearer {{token}}"},
+                {"key": "Content-Type", "value": "application/json"}
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": JSON.stringify({"nama": "Cabang A", "alamat": "Jl A", "is_active": true}, null, 2)
+              },
+              "url": {
+                "raw": "{{base_url}}/outlets",
+                "host": ["{{base_url}}"],
+                "path": ["outlets"]
+              }
+            }
+          },
+          {
+            "name": "7. Update Outlet",
+            "request": {
+              "method": "PUT",
+              "header": [
+                {"key": "Authorization", "value": "Bearer {{token}}"},
+                {"key": "Content-Type", "value": "application/json"}
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": JSON.stringify({"nama": "Cabang A Update", "alamat": "Jl B", "is_active": true}, null, 2)
+              },
+              "url": {
+                "raw": "{{base_url}}/outlets/1",
+                "host": ["{{base_url}}"],
+                "path": ["outlets", "1"]
+              }
+            }
+          },
+          {
+            "name": "8. Delete Outlet",
+            "request": {
+              "method": "DELETE",
+              "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+              "url": {
+                "raw": "{{base_url}}/outlets/1",
+                "host": ["{{base_url}}"],
+                "path": ["outlets", "1"]
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "Owner - Users",
+        "item": [
+          {
+            "name": "9. List Users",
+            "request": {
+              "method": "GET",
+              "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+              "url": {
+                "raw": "{{base_url}}/users",
+                "host": ["{{base_url}}"],
+                "path": ["users"]
+              }
+            }
+          },
+          {
+            "name": "10. Get User",
+            "request": {
+              "method": "GET",
+              "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+              "url": {
+                "raw": "{{base_url}}/users/1",
+                "host": ["{{base_url}}"],
+                "path": ["users", "1"]
+              }
+            }
+          },
+          {
+            "name": "11. Create User",
+            "request": {
+              "method": "POST",
+              "header": [
+                {"key": "Authorization", "value": "Bearer {{token}}"},
+                {"key": "Content-Type", "value": "application/json"}
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": JSON.stringify({"username": "kasir", "password": "123", "role": "karyawan", "outlet_id": 1}, null, 2)
+              },
+              "url": {
+                "raw": "{{base_url}}/users",
+                "host": ["{{base_url}}"],
+                "path": ["users"]
+              }
+            }
+          },
+          {
+            "name": "12. Update User",
+            "request": {
+              "method": "PUT",
+              "header": [
+                {"key": "Authorization", "value": "Bearer {{token}}"},
+                {"key": "Content-Type", "value": "application/json"}
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": JSON.stringify({"username": "kasir_update", "password": "newpass123", "role": "karyawan", "outlet_id": 2}, null, 2)
+              },
+              "url": {
+                "raw": "{{base_url}}/users/1",
+                "host": ["{{base_url}}"],
+                "path": ["users", "1"]
+              }
+            }
+          },
+          {
+            "name": "13. Delete User",
+            "request": {
+              "method": "DELETE",
+              "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+              "url": {
+                "raw": "{{base_url}}/users/1",
+                "host": ["{{base_url}}"],
+                "path": ["users", "1"]
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "Owner - Laporan",
+        "item": [
+          {
+            "name": "14. Laporan Pendapatan",
+            "request": {
+              "method": "GET",
+              "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+              "url": {
+                "raw": "{{base_url}}/laporan/pendapatan?start_date=2025-01-01&end_date=2025-12-31",
+                "host": ["{{base_url}}"],
+                "path": ["laporan", "pendapatan"],
+                "query": [
+                  {"key": "start_date", "value": "2025-01-01"},
+                  {"key": "end_date", "value": "2025-12-31"}
+                ]
+              }
+            }
+          },
+          {
+            "name": "15. Export Laporan",
+            "request": {
+              "method": "GET",
+              "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+              "url": {
+                "raw": "{{base_url}}/laporan/export?start_date=2025-01-01&end_date=2025-12-31",
+                "host": ["{{base_url}}"],
+                "path": ["laporan", "export"],
+                "query": [
+                  {"key": "start_date", "value": "2025-01-01"},
+                  {"key": "end_date", "value": "2025-12-31"}
+                ]
+              }
+            }
+          },
+          {
+            "name": "16. Dashboard",
+            "request": {
+              "method": "GET",
+              "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+              "url": {
+                "raw": "{{base_url}}/dashboard",
+                "host": ["{{base_url}}"],
+                "path": ["dashboard"]
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "Gudang - Bahan",
+        "item": [
+          {
+            "name": "17. List Bahan",
+            "request": {
+              "method": "GET",
+              "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+              "url": {
+                "raw": "{{base_url}}/gudang/bahan",
+                "host": ["{{base_url}}"],
+                "path": ["gudang", "bahan"]
+              }
+            }
+          },
+          {
+            "name": "18. Get Bahan",
+            "request": {
+              "method": "GET",
+              "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+              "url": {
+                "raw": "{{base_url}}/gudang/bahan/1",
+                "host": ["{{base_url}}"],
+                "path": ["gudang", "bahan", "1"]
+              }
+            }
+          },
+          {
+            "name": "19. Create Bahan",
+            "request": {
+              "method": "POST",
+              "header": [
+                {"key": "Authorization", "value": "Bearer {{token}}"},
+                {"key": "Content-Type", "value": "application/json"}
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": JSON.stringify({"nama": "Gula Pasir", "satuan": "kg", "stok_minimum_gudang": 100, "stok_minimum_outlet": 20}, null, 2)
+              },
+              "url": {
+                "raw": "{{base_url}}/gudang/bahan",
+                "host": ["{{base_url}}"],
+                "path": ["gudang", "bahan"]
+              }
+            }
+          },
+          {
+            "name": "20. Update Bahan",
+            "request": {
+              "method": "PUT",
+              "header": [
+                {"key": "Authorization", "value": "Bearer {{token}}"},
+                {"key": "Content-Type", "value": "application/json"}
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": JSON.stringify({"nama": "Gula Pasir Premium", "satuan": "kg", "stok_minimum_gudang": 150, "stok_minimum_outlet": 30}, null, 2)
+              },
+              "url": {
+                "raw": "{{base_url}}/gudang/bahan/1",
+                "host": ["{{base_url}}"],
+                "path": ["gudang", "bahan", "1"]
+              }
+            }
+          },
+          {
+            "name": "21. Delete Bahan",
+            "request": {
+              "method": "DELETE",
+              "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+              "url": {
+                "raw": "{{base_url}}/gudang/bahan/1",
+                "host": ["{{base_url}}"],
+                "path": ["gudang", "bahan", "1"]
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "Gudang - Barang Masuk",
+        "item": [
+          {
+            "name": "22. List Barang Masuk",
+            "request": {
+              "method": "GET",
+              "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+              "url": {
+                "raw": "{{base_url}}/gudang/barang-masuk",
+                "host": ["{{base_url}}"],
+                "path": ["gudang", "barang-masuk"]
+              }
+            }
+          },
+          {
+            "name": "23. Get Barang Masuk",
+            "request": {
+              "method": "GET",
+              "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+              "url": {
+                "raw": "{{base_url}}/gudang/barang-masuk/1",
+                "host": ["{{base_url}}"],
+                "path": ["gudang", "barang-masuk", "1"]
+              }
+            }
+          },
+          {
+            "name": "24. Create Barang Masuk",
+            "request": {
+              "method": "POST",
+              "header": [
+                {"key": "Authorization", "value": "Bearer {{token}}"},
+                {"key": "Content-Type", "value": "application/json"}
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": JSON.stringify({"bahan_id": 1, "jumlah": 100.5, "supplier": "Supplier XYZ"}, null, 2)
+              },
+              "url": {
+                "raw": "{{base_url}}/gudang/barang-masuk",
+                "host": ["{{base_url}}"],
+                "path": ["gudang", "barang-masuk"]
+              }
+            }
+          },
+          {
+            "name": "25. Update Barang Masuk",
+            "request": {
+              "method": "PUT",
+              "header": [
+                {"key": "Authorization", "value": "Bearer {{token}}"},
+                {"key": "Content-Type", "value": "application/json"}
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": JSON.stringify({"bahan_id": 2, "jumlah": 200.0, "supplier": "Supplier Baru"}, null, 2)
+              },
+              "url": {
+                "raw": "{{base_url}}/gudang/barang-masuk/1",
+                "host": ["{{base_url}}"],
+                "path": ["gudang", "barang-masuk", "1"]
+              }
+            }
+          },
+          {
+            "name": "26. Delete Barang Masuk",
+            "request": {
+              "method": "DELETE",
+              "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+              "url": {
+                "raw": "{{base_url}}/gudang/barang-masuk/1",
+                "host": ["{{base_url}}"],
+                "path": ["gudang", "barang-masuk", "1"]
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "Gudang - Barang Keluar",
+        "item": [
+          {
+            "name": "27. List Barang Keluar",
+            "request": {
+              "method": "GET",
+              "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+              "url": {
+                "raw": "{{base_url}}/gudang/barang-keluar",
+                "host": ["{{base_url}}"],
+                "path": ["gudang", "barang-keluar"]
+              }
+            }
+          },
+          {
+            "name": "28. Get Barang Keluar",
+            "request": {
+              "method": "GET",
+              "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+              "url": {
+                "raw": "{{base_url}}/gudang/barang-keluar/1",
+                "host": ["{{base_url}}"],
+                "path": ["gudang", "barang-keluar", "1"]
+              }
+            }
+          },
+          {
+            "name": "29. Create Barang Keluar",
+            "request": {
+              "method": "POST",
+              "header": [
+                {"key": "Authorization", "value": "Bearer {{token}}"},
+                {"key": "Content-Type", "value": "application/json"}
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": JSON.stringify({"permintaan_id": 1}, null, 2)
+              },
+              "url": {
+                "raw": "{{base_url}}/gudang/barang-keluar",
+                "host": ["{{base_url}}"],
+                "path": ["gudang", "barang-keluar"]
+              }
+            }
+          },
+          {
+            "name": "30. Update Barang Keluar",
+            "request": {
+              "method": "PUT",
+              "header": [
+                {"key": "Authorization", "value": "Bearer {{token}}"},
+                {"key": "Content-Type", "value": "application/json"}
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": JSON.stringify({"jumlah": 50}, null, 2)
+              },
+              "url": {
+                "raw": "{{base_url}}/gudang/barang-keluar/1",
+                "host": ["{{base_url}}"],
+                "path": ["gudang", "barang-keluar", "1"]
+              }
+            }
+          },
+          {
+            "name": "31. Delete Barang Keluar",
+            "request": {
+              "method": "DELETE",
+              "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+              "url": {
+                "raw": "{{base_url}}/gudang/barang-keluar/1",
+                "host": ["{{base_url}}"],
+                "path": ["gudang", "barang-keluar", "1"]
+              }
+            }
+          },
+          {
+            "name": "32. Terima Barang Keluar",
+            "request": {
+              "method": "POST",
+              "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+              "url": {
+                "raw": "{{base_url}}/gudang/barang-keluar/1/terima",
+                "host": ["{{base_url}}"],
+                "path": ["gudang", "barang-keluar", "1", "terima"]
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "Gudang - Stok & Permintaan",
+        "item": [
+          {
+            "name": "33. Stok Gudang",
+            "request": {
+              "method": "GET",
+              "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+              "url": {
+                "raw": "{{base_url}}/gudang/stok",
+                "host": ["{{base_url}}"],
+                "path": ["gudang", "stok"]
+              }
+            }
+          },
+          {
+            "name": "34. List Permintaan Stok",
+            "request": {
+              "method": "GET",
+              "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+              "url": {
+                "raw": "{{base_url}}/gudang/permintaan-stok",
+                "host": ["{{base_url}}"],
+                "path": ["gudang", "permintaan-stok"]
+              }
+            }
+          },
+          {
+            "name": "35. Get Permintaan Stok",
+            "request": {
+              "method": "GET",
+              "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+              "url": {
+                "raw": "{{base_url}}/gudang/permintaan-stok/1",
+                "host": ["{{base_url}}"],
+                "path": ["gudang", "permintaan-stok", "1"]
+              }
+            }
+          },
+          {
+            "name": "36. Update Status Permintaan",
+            "request": {
+              "method": "PUT",
+              "header": [
+                {"key": "Authorization", "value": "Bearer {{token}}"},
+                {"key": "Content-Type", "value": "application/json"}
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": JSON.stringify({"status": "approved"}, null, 2)
+              },
+              "url": {
+                "raw": "{{base_url}}/gudang/permintaan-stok/1",
+                "host": ["{{base_url}}"],
+                "path": ["gudang", "permintaan-stok", "1"]
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "Karyawan - Produk",
+        "item": [
+          {
+            "name": "37. List Produk",
+            "request": {
+              "method": "GET",
+              "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+              "url": {
+                "raw": "{{base_url}}/produk",
+                "host": ["{{base_url}}"],
+                "path": ["produk"]
+              }
+            }
+          },
+          {
+            "name": "38. Get Produk",
+            "request": {
+              "method": "GET",
+              "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+              "url": {
+                "raw": "{{base_url}}/produk/1",
+                "host": ["{{base_url}}"],
+                "path": ["produk", "1"]
+              }
+            }
+          },
+          {
+            "name": "39. Create Produk",
+            "request": {
+              "method": "POST",
+              "header": [
+                {"key": "Authorization", "value": "Bearer {{token}}"},
+                {"key": "Content-Type", "value": "application/json"}
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": JSON.stringify({
+                  "nama": "Es Teh Manis",
+                  "harga": 5000,
+                  "komposisi": [
+                    {"bahan_id": 1, "quantity": 2.5},
+                    {"bahan_id": 2, "quantity": 1.0}
+                  ]
+                }, null, 2)
+              },
+              "url": {
+                "raw": "{{base_url}}/produk",
+                "host": ["{{base_url}}"],
+                "path": ["produk"]
+              }
+            }
+          },
+          {
+            "name": "40. Update Produk",
+            "request": {
+              "method": "PUT",
+              "header": [
+                {"key": "Authorization", "value": "Bearer {{token}}"},
+                {"key": "Content-Type", "value": "application/json"}
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": JSON.stringify({
+                  "nama": "Es Teh Manis Update",
+                  "harga": 6000,
+                  "komposisi": [
+                    {"bahan_id": 1, "quantity": 3.0}
+                  ]
+                }, null, 2)
+              },
+              "url": {
+                "raw": "{{base_url}}/produk/1",
+                "host": ["{{base_url}}"],
+                "path": ["produk", "1"]
+              }
+            }
+          },
+          {
+            "name": "41. Delete Produk",
+            "request": {
+              "method": "DELETE",
+              "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+              "url": {
+                "raw": "{{base_url}}/produk/1",
+                "host": ["{{base_url}}"],
+                "path": ["produk", "1"]
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "Karyawan - Transaksi",
+        "item": [
+          {
+            "name": "42. List Transaksi",
+            "request": {
+              "method": "GET",
+              "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+              "url": {
+                "raw": "{{base_url}}/transaksi",
+                "host": ["{{base_url}}"],
+                "path": ["transaksi"]
+              }
+            }
+          },
+          {
+            "name": "43. Get Transaksi",
+            "request": {
+              "method": "GET",
+              "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+              "url": {
+                "raw": "{{base_url}}/transaksi/1",
+                "host": ["{{base_url}}"],
+                "path": ["transaksi", "1"]
+              }
+            }
+          },
+          {
+            "name": "44. Create Transaksi",
+            "request": {
+              "method": "POST",
+              "header": [
+                {"key": "Authorization", "value": "Bearer {{token}}"},
+                {"key": "Content-Type", "value": "application/json"}
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": JSON.stringify({
+                  "tanggal": "2025-12-05 14:30:00",
+                  "metode_bayar": "qris",
+                  "items": JSON.stringify([
+                    {"produk_id": 1, "quantity": 2},
+                    {"produk_id": 2, "quantity": 1}
+                  ])
+                }, null, 2)
+              },
+              "url": {
+                "raw": "{{base_url}}/transaksi",
+                "host": ["{{base_url}}"],
+                "path": ["transaksi"]
+              }
+            }
+          },
+          {
+            "name": "45. Update Transaksi",
+            "request": {
+              "method": "PUT",
+              "header": [
+                {"key": "Authorization", "value": "Bearer {{token}}"},
+                {"key": "Content-Type", "value": "application/json"}
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": JSON.stringify({
+                  "tanggal": "2025-12-05 15:00:00",
+                  "metode_bayar": "tunai",
+                  "items": JSON.stringify([
+                    {"produk_id": 1, "quantity": 3}
+                  ])
+                }, null, 2)
+              },
+              "url": {
+                "raw": "{{base_url}}/transaksi/1",
+                "host": ["{{base_url}}"],
+                "path": ["transaksi", "1"]
+              }
+            }
+          },
+          {
+            "name": "46. Delete Transaksi",
+            "request": {
+              "method": "DELETE",
+              "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+              "url": {
+                "raw": "{{base_url}}/transaksi/1",
+                "host": ["{{base_url}}"],
+                "path": ["transaksi", "1"]
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "Karyawan - Permintaan Stok",
+        "item": [
+          {
+            "name": "47. List Permintaan Stok",
+            "request": {
+              "method": "GET",
+              "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+              "url": {
+                "raw": "{{base_url}}/permintaan-stok",
+                "host": ["{{base_url}}"],
+                "path": ["permintaan-stok"]
+              }
+            }
+          },
+          {
+            "name": "48. Get Permintaan Stok",
+            "request": {
+              "method": "GET",
+              "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+              "url": {
+                "raw": "{{base_url}}/permintaan-stok/1",
+                "host": ["{{base_url}}"],
+                "path": ["permintaan-stok", "1"]
+              }
+            }
+          },
+          {
+            "name": "49. Create Permintaan Stok",
+            "request": {
+              "method": "POST",
+              "header": [
+                {"key": "Authorization", "value": "Bearer {{token}}"},
+                {"key": "Content-Type", "value": "application/json"}
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": JSON.stringify({"bahan_id": 1, "jumlah": 50.0}, null, 2)
+              },
+              "url": {
+                "raw": "{{base_url}}/permintaan-stok",
+                "host": ["{{base_url}}"],
+                "path": ["permintaan-stok"]
+              }
+            }
+          },
+          {
+            "name": "50. Update Permintaan Stok",
+            "request": {
+              "method": "PUT",
+              "header": [
+                {"key": "Authorization", "value": "Bearer {{token}}"},
+                {"key": "Content-Type", "value": "application/json"}
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": JSON.stringify({"bahan_id": 2, "jumlah": 75.0}, null, 2)
+              },
+              "url": {
+                "raw": "{{base_url}}/permintaan-stok/1",
+                "host": ["{{base_url}}"],
+                "path": ["permintaan-stok", "1"]
+              }
+            }
+          },
+          {
+            "name": "51. Delete Permintaan Stok",
+            "request": {
+              "method": "DELETE",
+              "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+              "url": {
+                "raw": "{{base_url}}/permintaan-stok/1",
+                "host": ["{{base_url}}"],
+                "path": ["permintaan-stok", "1"]
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "Karyawan - Stok Outlet",
+        "item": [
+          {
+            "name": "52. Stok Outlet",
+            "request": {
+              "method": "GET",
+              "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+              "url": {
+                "raw": "{{base_url}}/stok/outlet",
+                "host": ["{{base_url}}"],
+                "path": ["stok", "outlet"]
+              }
+            }
+          }
+        ]
+      }
+    ]
+  };
+
+  const blob = new Blob([JSON.stringify(postmanCollection, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'Stok_Penjualan_API_Complete.postman_collection.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+</script>
+</body>
+</html>
